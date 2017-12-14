@@ -1,0 +1,14 @@
+3 4
+0 0 1 rd
+0 1 1 rld
+0 2 1 rld
+0 3 1 ld
+1 0 1 rud
+1 1 1 ruld
+1 2 f ruld
+1 3 1 uld
+2 0 1 ru
+2 1 1 rul
+2 2 1 rul
+2 3 s ul
+
