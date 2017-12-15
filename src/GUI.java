@@ -27,19 +27,26 @@ public class GUI extends Application {
     public void start(Stage primaryStage) {
 
         Maze maze = new Maze();
-        maze = maze.loadMazeFromFile("maze1.txt");
-        if (maze == null) return;
+        maze = maze.loadMazeFromFile("maze5.txt");
+        if (maze == null) {
+            System.exit(0);
+        }
         FindMaxWay res = new FindMaxWay(maze);
         res.Run(new Point(maze.start.y, maze.start.x), new Point(maze.finish.x, maze.finish.y));
 
-        if (res.BestWay.isEmpty()) System.out.println("bad maze: found no paths");
+        if (res.BestWay == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("found no paths");
+            alert.showAndWait();
+            System.exit(0);
+        }
 
         Group root = new Group();
         Scene scene = new Scene(root, maze.DimX * (cellSize + gapSize) + gapSize,
                 maze.DimY * (cellSize + gapSize) + gapSize, Color.WHITE);
 
-        Rectangle[][] rectangles = new Rectangle[maze.DimX][maze.DimY];
-
+        Rectangle[][] rectangles = new Rectangle[maze.DimY][];
         for (int i = 0; i < maze.DimY; i++) {
             rectangles[i] = new Rectangle[maze.DimX];
             for (int j = 0; j < maze.DimX; j++) {
@@ -136,6 +143,7 @@ public class GUI extends Application {
         }
 
         primaryStage.setResizable(false);
+        primaryStage.setTitle("Mazesolver");
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.show();

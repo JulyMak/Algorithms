@@ -4,7 +4,7 @@ public class main {
     public static void main(String[] args) {
         Maze maze = new Maze();
 
-        maze = maze.loadMazeFromFile("maze3.txt");
+        maze = maze.loadMazeFromFile("maze5.txt");
         if (maze == null) return;
         FindMaxWay res = new FindMaxWay(maze);
         res.Run(new Point(maze.start.y, maze.start.x), new Point(maze.finish.x, maze.finish.y));

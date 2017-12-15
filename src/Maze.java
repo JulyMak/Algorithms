@@ -1,3 +1,5 @@
+import javafx.scene.control.Alert;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
@@ -73,8 +75,12 @@ class Maze {
                 }
                 String[] line = sCurrentLine.trim().split(" +");
                 if (line.length != 4) {
-                    System.out.println("loadMazeFromFile(String filename) error: invalid string " + sCurrentLine +
-                            " format is: <row col val ?ruld>");
+                    //System.out.println("loadMazeFromFile(String filename) error: invalid string " + sCurrentLine +
+                    //      " format is: <row col val ?ruld>");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("invalid string");
+                    alert.showAndWait();
                     return null;
                 }
                 int row = Integer.parseInt(line[0]);
@@ -86,7 +92,11 @@ class Maze {
                         maze.start.y = row;
                         maze.start.x = col;
                     } else {
-                        System.out.println("bad maze: found more than 1 start cell");
+                        // System.out.println("bad maze: found more than 1 start cell");
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("found more than 1 start cell");
+                        alert.showAndWait();
                         return null;
                     }
                 }
@@ -95,7 +105,11 @@ class Maze {
                         maze.finish.y = row;
                         maze.finish.x = col;
                     } else {
-                        System.out.println("bad maze: found more than 1 finish cell");
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("found more than 1 finish cell");
+                        alert.showAndWait();
+                        //System.out.println("bad maze: found more than 1 finish cell");
                         return null;
                     }
                 }
@@ -106,6 +120,13 @@ class Maze {
 
                 for (int i = 0; i < paths.length; i++) {
                     switch (paths[i]) {
+                        case 'n': {
+                            maze.cells[row][col].paths.up = false;
+                            maze.cells[row][col].paths.left = false;
+                            maze.cells[row][col].paths.down = false;
+                            maze.cells[row][col].paths.right = false;
+                            break;
+                        }
                         case 'r': {
                             maze.cells[row][col].paths.right = true;
                             break;
@@ -126,21 +147,30 @@ class Maze {
                 }
             }
             if (maze.start.x == -1) {
-                System.out.println("bad maze: found no start cell");
+                //System.out.println("bad maze: found no start cell");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("found no start cell");
+                alert.showAndWait();
                 return null;
             }
             if (maze.finish.x == -1) {
-                System.out.println("bad maze: found no finish cell");
+                //System.out.println("bad maze: found no finish cell");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("found no finish cell");
+                alert.showAndWait();
                 return null;
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("error");
         } catch (NumberFormatException e) {
             System.out.println("Just numbers!");
+            System.exit(-1);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
         } finally {
             try {
                 if (br != null)
