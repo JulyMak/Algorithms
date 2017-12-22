@@ -27,24 +27,17 @@ public class GUI extends Application {
     public void start(Stage primaryStage) {
 
         Maze maze = new Maze();
-        maze = maze.loadMazeFromFile("maze5.txt");
+        maze = maze.loadMazeFromFile("maze4.txt");
         if (maze == null) {
             System.exit(0);
         }
         FindMaxWay res = new FindMaxWay(maze);
         res.Run(new Point(maze.start.y, maze.start.x), new Point(maze.finish.x, maze.finish.y));
 
-        if (res.BestWay == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("found no paths");
-            alert.showAndWait();
-            System.exit(0);
-        }
 
         Group root = new Group();
         Scene scene = new Scene(root, maze.DimX * (cellSize + gapSize) + gapSize,
-                maze.DimY * (cellSize + gapSize) + gapSize, Color.WHITE);
+                maze.DimY * (cellSize + gapSize) + gapSize, Color.WHITE); // create Scene
 
         Rectangle[][] rectangles = new Rectangle[maze.DimY][];
         for (int i = 0; i < maze.DimY; i++) {
@@ -54,7 +47,7 @@ public class GUI extends Application {
             }
         }
 
-        for (int i = 0; i < res.maze.DimY; i++) {
+        for (int i = 0; i < res.maze.DimY; i++) { // draw maze
             for (int j = 0; j < res.maze.DimX; j++) {
 
                 rectangles[i][j].setX(offset + j * (cellSize + gapSize));
@@ -62,24 +55,24 @@ public class GUI extends Application {
                 rectangles[i][j].setWidth(cellSize);
                 rectangles[i][j].setHeight(cellSize);
 
-                rectangles[i][j].setFill(Color.CORAL);
+                rectangles[i][j].setFill(Color.CORAL); // draw rectangle
 
-                Text text = new Text(res.maze.cells[i][j].value);
+                Text text = new Text(res.maze.cells[i][j].value); // set text
                 text.setX(offset + j * (cellSize + gapSize) + cellSize / 2 - 5);
                 text.setY(offset + i * (cellSize + gapSize) + cellSize / 2 + 5);
                 text.setFill(Color.BLACK);
                 text.setFont(Font.font("Calibri", 20));
 
-                root.getChildren().addAll(rectangles[i][j], text);
+                root.getChildren().addAll(rectangles[i][j], text); // add to container
 
-                Rectangle wallUp = new Rectangle();
+                Rectangle wallUp = new Rectangle(); // draw up wall
                 wallUp.setX(offset + j * cellSize + (j - 1) * gapSize);
                 wallUp.setY(offset + i * cellSize + (i - 1) * gapSize);
                 wallUp.setHeight(gapSize);
                 wallUp.setWidth(cellSize + 2 * gapSize);
                 wallUp.setFill(Color.BLACK);
                 root.getChildren().add(wallUp);
-                if (res.maze.cells[i][j].paths.up) {
+                if (res.maze.cells[i][j].paths.up) { // draw path
                     Rectangle p = new Rectangle();
                     p.setX(offset + j * cellSize + (j - 1) * gapSize + wallSize);
                     p.setY(offset + i * cellSize + (i - 1) * gapSize);
@@ -142,28 +135,36 @@ public class GUI extends Application {
             }
         }
 
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(false); // can't change size
         primaryStage.setTitle("Mazesolver");
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.show();
 
-        new Thread(() -> {
+        if (res.BestWay == null) { // if no ways make a message
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("found no paths");
+            alert.showAndWait();
+            System.exit(0);
+        }
+
+        new Thread(() -> { // create new thread for updating scene
             for (Point p : res.BestWay) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(500); // make a pause
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                Platform.runLater(() -> rectangles[p.y][p.x].setFill(Color.YELLOW));
+                Platform.runLater(() -> rectangles[p.y][p.x].setFill(Color.YELLOW)); // add to queue of actions
             }
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Platform.runLater(() -> {
+            Platform.runLater(() -> { // in the end messsage of sum
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Info");
                 alert.setHeaderText("Success");
@@ -172,5 +173,6 @@ public class GUI extends Application {
                 alert.show();
             });
         }).start();
+
     }
 }

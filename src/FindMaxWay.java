@@ -7,7 +7,7 @@ public class FindMaxWay {
     static Maze maze;
     public ArrayList<Point> BestWay;
 
-    public ArrayList<ArrayList<Point>> Ways = new ArrayList<>();
+    public ArrayList<ArrayList<Point>> Ways = new ArrayList<>(); // array of ways that are array of points
 
     public FindMaxWay(Maze maze) {
         this.maze = maze;
@@ -15,7 +15,7 @@ public class FindMaxWay {
 
     public void Run(Point start, Point finish) {
         this.finish = finish;
-        checkWay(start.y, start.x, new ArrayList<>());
+        checkWay(start.y, start.x, new ArrayList<>()); // check ways from start to finish
         FindBestWay();
     }
 
@@ -26,18 +26,18 @@ public class FindMaxWay {
 
         if (maze.cells[y][x].paths.right && !isPassed(new Point(x + 1, y), Way)) {
             checkWay(x + 1, y, Way);
-        }
+        } // check right side if it was not passed and doesn't have a wall
         if (maze.cells[y][x].paths.left && !isPassed(new Point(x - 1, y), Way)) {
             checkWay(x - 1, y, Way);
-        }
+        } // check left side
         if (maze.cells[y][x].paths.down && !isPassed(new Point(x, y + 1), Way)) {
             checkWay(x, y + 1, Way);
-        }
+        } //check down side
         if (maze.cells[y][x].paths.up && !isPassed(new Point(x, y - 1), Way)) {
             checkWay(x, y - 1, Way);
-        }
+        } //check up side
         if (x == finish.x && y == finish.y) {
-            Ways.add(Way);
+            Ways.add(Way); // if we get finish add way
         }
     }
 
@@ -63,7 +63,7 @@ public class FindMaxWay {
         sum = maxSum;
     }
 
-    public int countSum(ArrayList<Point> r) {
+    public int countSum(ArrayList<Point> r) {   // count sum in arrayList besides s and f
         int res = 0;
         for (Point p : r) {
             if (!maze.cells[p.y][p.x].value.equals("s") && !maze.cells[p.y][p.x].value.equals("f")) {

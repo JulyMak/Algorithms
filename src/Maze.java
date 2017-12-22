@@ -56,11 +56,11 @@ class Maze {
             String sCurrentLine;
             sCurrentLine = br.readLine();
 
-            maze.DimY = Integer.parseInt(sCurrentLine.trim().split(" +")[0]);
+            maze.DimY = Integer.parseInt(sCurrentLine.trim().split(" +")[0]); //  size of maze
             maze.DimX = Integer.parseInt(sCurrentLine.trim().split(" +")[1]);
             maze.cells = new Cell[maze.DimY][];
             for (int i = 0; i < maze.DimY; i++) {
-                maze.cells[i] = new Cell[maze.DimX];
+                maze.cells[i] = new Cell[maze.DimX]; // fill cells
                 for (int j = 0; j < maze.DimX; j++) {
                     maze.cells[i][j] = new Cell();
                     maze.cells[i][j].paths = new Cell.Paths();
@@ -71,10 +71,10 @@ class Maze {
 
             while ((sCurrentLine = br.readLine()) != null) {
                 if (sCurrentLine.equals("")) {
-                    continue;
+                    continue;   // do nothing if line is empty
                 }
                 String[] line = sCurrentLine.trim().split(" +");
-                if (line.length != 4) {
+                if (line.length != 4) { // if we don't have enough or more than need data
                     //System.out.println("loadMazeFromFile(String filename) error: invalid string " + sCurrentLine +
                     //      " format is: <row col val ?ruld>");
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -87,11 +87,11 @@ class Maze {
                 int col = Integer.parseInt(line[1]);
 
 
-                if (line[2].equals("s")) {
+                if (line[2].equals("s")) { // start
                     if (maze.start.x == -1 && maze.start.y == -1) {
                         maze.start.y = row;
                         maze.start.x = col;
-                    } else {
+                    } else {   // if coordinates were changed we have more than 1 start
                         // System.out.println("bad maze: found more than 1 start cell");
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error");
@@ -100,11 +100,11 @@ class Maze {
                         return null;
                     }
                 }
-                if (line[2].equals("f")) {
+                if (line[2].equals("f")) { // finish
                     if (maze.finish.x == -1 && maze.finish.y == -1) {
                         maze.finish.y = row;
                         maze.finish.x = col;
-                    } else {
+                    } else {  // if coordinates were changed we have more than 1 finish
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error");
                         alert.setHeaderText("found more than 1 finish cell");
@@ -118,15 +118,8 @@ class Maze {
 
                 char[] paths = line[3].toCharArray();
 
-                for (int i = 0; i < paths.length; i++) {
+                for (int i = 0; i < paths.length; i++) { // make pathes
                     switch (paths[i]) {
-                        case 'n': {
-                            maze.cells[row][col].paths.up = false;
-                            maze.cells[row][col].paths.left = false;
-                            maze.cells[row][col].paths.down = false;
-                            maze.cells[row][col].paths.right = false;
-                            break;
-                        }
                         case 'r': {
                             maze.cells[row][col].paths.right = true;
                             break;
@@ -146,7 +139,7 @@ class Maze {
                     }
                 }
             }
-            if (maze.start.x == -1) {
+            if (maze.start.x == -1) { // if coordinates did not changed no start
                 //System.out.println("bad maze: found no start cell");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
